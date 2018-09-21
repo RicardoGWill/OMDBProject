@@ -1,0 +1,2 @@
+# OMDBProject
+This app uses an API from OMDB to get JSON information, which is parsed. Various items, such as "Title", "Year", and other info such as an image URL are brought into the app after a movie title is entered into the EditText and the "Get Movie Info" button is pressed.  Note that the EditText string must be changed so that spaces are turned into "%20" signs necessary for the URL to work.  Also, upon the button being pushed, the keyboard disappears so the screen is not cluttered with it.
