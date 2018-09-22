@@ -25,7 +25,7 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView movieTitleTextView, infoTextView, ratingsTextView;
+    private TextView movieTitleTextView, infoTextView, moreInfoTextView, ratingsTextView;
     EditText movieTitleEditText;
     ImageView moviePosterImageView;
     Button parseButton;
@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         movieTitleTextView = findViewById(R.id.movie_title_textView);
         infoTextView = findViewById(R.id.info_textView);
+        moreInfoTextView = findViewById(R.id.more_info_textView);
         ratingsTextView = findViewById(R.id.ratings_textView);
         parseButton = findViewById(R.id.parse_button);
         movieTitleEditText = findViewById(R.id.movie_title_editText);
@@ -48,8 +49,9 @@ public class MainActivity extends AppCompatActivity {
         parseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ratingsTextView.setText("");
+                ratingsTextView.setText("Ratings:  \n\n");
                 jsonParse();
+                movieTitleEditText.setText("");
             }
         });
 
@@ -66,33 +68,51 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    // This is to bring out the Strings not embedded in Objects {} or Arrays {}.
+                    // Below is to bring out the Strings not embedded in Objects {} or Arrays {}.
                     String titleJSONString = response.getString("Title");
                     String yearJSONString = response.getString("Year");
                     String ratedJSONString = response.getString("Rated");
                     String runtimeJSONString = response.getString("Runtime");
+                    String directorJSONString = response.getString("Director");
+                    String genreJSONString = response.getString("Genre");
+                    String actorsJSONString = response.getString("Actors");
+                    String plotJSONString = response.getString("Plot");
+                    String writerJSONString = response.getString("Writer");
 
+                    // This sets the "movieTitleTextView".
                     movieTitleTextView.setText("");
                     movieTitleTextView.append(titleJSONString);
 
+                    // This sets the "infoTextView".
                     infoTextView.setText("");
                     infoTextView.append(
-                            "Year Released: " + yearJSONString + "\n" +
-                            "Rating: " + ratedJSONString + "\n" +
-                            "Runtime: " + runtimeJSONString
+                            "Year Released:  " + yearJSONString + "\n" +
+                            "Rating:  " + ratedJSONString + "\n" +
+                            "Runtime:  " + runtimeJSONString + "\n" +
+                            "Director:  " + directorJSONString
                     );
 
-                    // This sets the Imageview to the movie poster.
+                    // This sets the "moreInfoTextView".
+                    moreInfoTextView.setText("");
+                    moreInfoTextView.append(
+                            "Genre:  " + genreJSONString + "\n\n" +
+                            "Actors:  " + actorsJSONString + "\n\n" +
+                            "Plot:  " + plotJSONString + "\n\n" +
+                            "Written by:  " + writerJSONString + "\n"
+                    );
+
+                            // This sets the Imageview to the movie poster.
                     String posterJSONString = response.getString("Poster");
                     Picasso.get().load(posterJSONString).into(moviePosterImageView);
 
                     // This is for the JSON "Ratings" Array - Ratings: [...]
                     JSONArray jsonArray = response.getJSONArray("Ratings");
+                    // This gets the three Objects within the "Ratings" Array.
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject statesJSONObject = jsonArray.getJSONObject(i);
-
-                        String nameString = statesJSONObject.getString("Source");
-                        String capitalString = statesJSONObject.getString("Value");
+                        JSONObject ratingsJSONObject = jsonArray.getJSONObject(i);
+                        // "Source" and "Value" are Strings within the three Objects inside the "Ratings" Array.
+                        String nameString = ratingsJSONObject.getString("Source");
+                        String capitalString = ratingsJSONObject.getString("Value");
 
                         ratingsTextView.append(nameString + "\n" +
                                 "★ " + capitalString + "\n\n");
