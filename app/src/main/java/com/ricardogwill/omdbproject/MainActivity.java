@@ -1,3 +1,4 @@
+// This app uses the OMDb API.
 package com.ricardogwill.omdbproject;
 
 import android.content.Context;
